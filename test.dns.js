@@ -411,3 +411,92 @@ describe("RECORD PTR", function() {
   });
 
 });
+
+describe("RECORD NAPTR - REGEX", function() {
+
+  let test = new DNSPacket("005485800001000100000000056e617074720477696b690477696b690000ff0001c00c0023000100002a300015007b01410241410454657374072f77696b692f6700").printPacket();
+  
+  it("Check Header", function(){
+    expect(test.Header.id).to.equal(84);
+    expect(test.Header.flags.qr).to.equal(1);
+    expect(test.Header.flags.opcode).to.equal("0000");
+    expect(test.Header.flags.aa).to.equal("1");
+    expect(test.Header.flags.tc).to.equal("0");
+    expect(test.Header.flags.rd).to.equal("1");
+    expect(test.Header.flags.ra).to.equal("1");
+    expect(test.Header.flags.z).to.equal("000");
+    expect(test.Header.flags.rcode).to.equal("0000");
+  });
+
+  it("Count of Sections", function(){
+    expect(test.Questions.length).to.equal(test.Header.qdcount);
+    expect(test.Answers.length).to.equal(test.Header.ancount + test.Header.nscount + test.Header.arcount);
+  });
+
+  it("Question", function(){
+    expect(test.Questions[0].type).to.equal("ANY");
+    expect(test.Questions[0].name).to.equal("naptr.wiki.wiki");
+    expect(test.Questions[0].class).to.equal("INTERNET");
+  });
+
+  it("Answer", function(){
+    expect(test.Answers[0].name).to.equal("naptr.wiki.wiki");
+    expect(test.Answers[0].type).to.equal("NAPTR");
+    expect(test.Answers[0].class).to.equal("INTERNET");
+    expect(test.Answers[0].ttl).to.equal(10800);
+    expect(test.Answers[0].size).to.equal(21);
+    expect(test.Answers[0].data.order).to.equal(123);
+    expect(test.Answers[0].data.priority).to.equal(321);
+    expect(test.Answers[0].data.flags).to.equal("AA");
+    expect(test.Answers[0].data.service).to.equal("Test");
+    expect(test.Answers[0].data.regex).to.equal("/wiki/g");
+    expect(test.Answers[0].data.replacement).to.equal("");
+  });
+
+});
+
+
+describe("RECORD NAPTR - REPLACEMENT", function() {
+
+  let test = new DNSPacket("005c85800001000100000000056e617074720477696b690477696b690000ff0001c00c0023000100002a30001a007b0141015303534950000977696b697065646961036f726700").printPacket();
+  
+  it("Check Header", function(){
+    expect(test.Header.id).to.equal(92);
+    expect(test.Header.flags.qr).to.equal(1);
+    expect(test.Header.flags.opcode).to.equal("0000");
+    expect(test.Header.flags.aa).to.equal("1");
+    expect(test.Header.flags.tc).to.equal("0");
+    expect(test.Header.flags.rd).to.equal("1");
+    expect(test.Header.flags.ra).to.equal("1");
+    expect(test.Header.flags.z).to.equal("000");
+    expect(test.Header.flags.rcode).to.equal("0000");
+  });
+
+  it("Count of Sections", function(){
+    expect(test.Questions.length).to.equal(test.Header.qdcount);
+    expect(test.Answers.length).to.equal(test.Header.ancount + test.Header.nscount + test.Header.arcount);
+  });
+
+  it("Question", function(){
+    expect(test.Questions[0].type).to.equal("ANY");
+    expect(test.Questions[0].name).to.equal("naptr.wiki.wiki");
+    expect(test.Questions[0].class).to.equal("INTERNET");
+  });
+
+  it("Answer", function(){
+    expect(test.Answers[0].name).to.equal("naptr.wiki.wiki");
+    expect(test.Answers[0].type).to.equal("NAPTR");
+    expect(test.Answers[0].class).to.equal("INTERNET");
+    expect(test.Answers[0].ttl).to.equal(10800);
+    expect(test.Answers[0].size).to.equal(26);
+    expect(test.Answers[0].data.order).to.equal(123);
+    expect(test.Answers[0].data.priority).to.equal(321);
+    expect(test.Answers[0].data.flags).to.equal("S");
+    expect(test.Answers[0].data.service).to.equal("SIP");
+    expect(test.Answers[0].data.regex).to.equal("");
+    expect(test.Answers[0].data.replacement).to.equal("wikipedia.org");
+  });
+
+});
+
+
