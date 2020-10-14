@@ -373,3 +373,41 @@ describe("RECORD TXT", function() {
   });
 
 });
+
+describe("RECORD PTR", function() {
+
+  let test = new DNSPacket("004d81000001000100000000013801380138013807696e2d61646472046172706100000c0001c00c000c00010000003c000c03646e7306676f6f676c6500").printPacket();
+  
+  it("Check Header", function(){
+    expect(test.Header.id).to.equal(77);
+    expect(test.Header.flags.qr).to.equal(1);
+    expect(test.Header.flags.opcode).to.equal("0000");
+    expect(test.Header.flags.aa).to.equal("0");
+    expect(test.Header.flags.tc).to.equal("0");
+    expect(test.Header.flags.rd).to.equal("1");
+    expect(test.Header.flags.ra).to.equal("0");
+    expect(test.Header.flags.z).to.equal("000");
+    expect(test.Header.flags.rcode).to.equal("0000");
+  });
+
+  it("Count of Sections", function(){
+    expect(test.Questions.length).to.equal(test.Header.qdcount);
+    expect(test.Answers.length).to.equal(test.Header.ancount + test.Header.nscount + test.Header.arcount);
+  });
+
+  it("Question", function(){
+    expect(test.Questions[0].type).to.equal("PTR");
+    expect(test.Questions[0].name).to.equal("8.8.8.8.in-addr.arpa");
+    expect(test.Questions[0].class).to.equal("INTERNET");
+  });
+
+  it("Answer", function(){
+    expect(test.Answers[0].name).to.equal("8.8.8.8.in-addr.arpa");
+    expect(test.Answers[0].type).to.equal("PTR");
+    expect(test.Answers[0].class).to.equal("INTERNET");
+    expect(test.Answers[0].ttl).to.equal(60);
+    expect(test.Answers[0].size).to.equal(12);
+    expect(test.Answers[0].data).to.equal("dns.google");
+  });
+
+});
