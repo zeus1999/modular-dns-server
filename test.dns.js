@@ -290,3 +290,86 @@ describe("RECORD NS", function() {
   });
 
 });
+
+
+describe("RECORD MX", function() {
+
+  let test = new DNSPacket("0048810000010001000000000b6a756e672d746f6269617302646500000f0001c00c000f00010000003c0004000ac00c").printPacket();
+  
+  it("Check Header", function(){
+    expect(test.Header.id).to.equal(72);
+    expect(test.Header.flags.qr).to.equal(1);
+    expect(test.Header.flags.opcode).to.equal("0000");
+    expect(test.Header.flags.aa).to.equal("0");
+    expect(test.Header.flags.tc).to.equal("0");
+    expect(test.Header.flags.rd).to.equal("1");
+    expect(test.Header.flags.ra).to.equal("0");
+    expect(test.Header.flags.z).to.equal("000");
+    expect(test.Header.flags.rcode).to.equal("0000");
+  });
+
+  it("Count of Sections", function(){
+    expect(test.Questions.length).to.equal(test.Header.qdcount);
+    expect(test.Answers.length).to.equal(test.Header.ancount + test.Header.nscount + test.Header.arcount);
+  });
+
+  it("Question", function(){
+    expect(test.Questions[0].type).to.equal("MX");
+    expect(test.Questions[0].name).to.equal("jung-tobias.de");
+    expect(test.Questions[0].class).to.equal("INTERNET");
+  });
+
+  it("Answer", function(){
+    expect(test.Answers[0].name).to.equal("jung-tobias.de");
+    expect(test.Answers[0].type).to.equal("MX");
+    expect(test.Answers[0].class).to.equal("INTERNET");
+    expect(test.Answers[0].ttl).to.equal(60);
+    expect(test.Answers[0].size).to.equal(4);
+    expect(test.Answers[0].data.priority).to.equal(10);
+    expect(test.Answers[0].data.exchange).to.equal("jung-tobias.de");
+  });
+
+});
+
+
+describe("RECORD TXT", function() {
+
+  let test = new DNSPacket("004a8100000100050000000006676f6f676c6503636f6d0000100001c00c001000010000003c003c3b66616365626f6f6b2d646f6d61696e2d766572696669636174696f6e3d3232726d3535316375346b3061623062787377353336746c647334683935c00c001000010000003c004140676c6f62616c7369676e2d736d696d652d64763d434459582b584648557732776d6c362f4762382b353942734833314b7a55723663316c32425076714b58383dc00c001000010000003c002423763d7370663120696e636c7564653a5f7370662e676f6f676c652e636f6d207e616c6cc00c001000010000003c002e2d646f63757369676e3d31623061363735342d343962312d346462352d383534302d643263313236363462323839c00c001000010000003c002e2d646f63757369676e3d30353935383438382d343735322d346566322d393565622d616137626138613362643065").printPacket();
+  
+  it("Check Header", function(){
+    expect(test.Header.id).to.equal(74);
+    expect(test.Header.flags.qr).to.equal(1);
+    expect(test.Header.flags.opcode).to.equal("0000");
+    expect(test.Header.flags.aa).to.equal("0");
+    expect(test.Header.flags.tc).to.equal("0");
+    expect(test.Header.flags.rd).to.equal("1");
+    expect(test.Header.flags.ra).to.equal("0");
+    expect(test.Header.flags.z).to.equal("000");
+    expect(test.Header.flags.rcode).to.equal("0000");
+  });
+
+  it("Count of Sections", function(){
+    expect(test.Questions.length).to.equal(test.Header.qdcount);
+    expect(test.Answers.length).to.equal(test.Header.ancount + test.Header.nscount + test.Header.arcount);
+  });
+
+  it("Question", function(){
+    expect(test.Questions[0].type).to.equal("TXT");
+    expect(test.Questions[0].name).to.equal("google.com");
+    expect(test.Questions[0].class).to.equal("INTERNET");
+  });
+
+  it("Answer", function(){
+    expect(test.Answers[0].name).to.equal("google.com");
+    expect(test.Answers[0].type).to.equal("TXT");
+    expect(test.Answers[0].class).to.equal("INTERNET");
+    expect(test.Answers[0].ttl).to.equal(60);
+    expect(test.Answers[0].size).to.equal(60);
+    expect(test.Answers[0].data).to.equal("facebook-domain-verification=22rm551cu4k0ab0bxsw536tlds4h95");
+    expect(test.Answers[1].data).to.equal("globalsign-smime-dv=CDYX+XFHUw2wml6/Gb8+59BsH31KzUr6c1l2BPvqKX8=");
+    expect(test.Answers[2].data).to.equal("v=spf1 include:_spf.google.com ~all");
+    expect(test.Answers[3].data).to.equal("docusign=1b0a6754-49b1-4db5-8540-d2c12664b289");
+    expect(test.Answers[4].data).to.equal("docusign=05958488-4752-4ef2-95eb-aa7ba8a3bd0e");
+  });
+
+});
