@@ -779,3 +779,42 @@ describe("RECORD MR", function() {
   });
 
 });
+
+describe("RECORD RT", function() {
+
+  let test = new DNSPacket("77d4858000010001000000010477696b690477696b690000150001c00c0015000100002a30001200580977696b6970656469610477696b69000000290500000000000000").printPacket();
+  
+  it("Check Header", function(){
+    expect(test.Header.id).to.equal(30676);
+    expect(test.Header.flags.qr).to.equal(1);
+    expect(test.Header.flags.opcode).to.equal("0000");
+    expect(test.Header.flags.aa).to.equal("1");
+    expect(test.Header.flags.tc).to.equal("0");
+    expect(test.Header.flags.rd).to.equal("1");
+    expect(test.Header.flags.ra).to.equal("1");
+    expect(test.Header.flags.z).to.equal("000");
+    expect(test.Header.flags.rcode).to.equal("0000");
+  });
+
+  it("Count of Sections", function(){
+    expect(test.Questions.length).to.equal(test.Header.qdcount);
+    expect(test.Answers.length).to.equal(test.Header.ancount + test.Header.nscount + test.Header.arcount);
+  });
+
+  it("Question", function(){
+    expect(test.Questions[0].type).to.equal("RT");
+    expect(test.Questions[0].name).to.equal("wiki.wiki");
+    expect(test.Questions[0].class).to.equal("INTERNET");
+  });
+
+  it("Answer", function(){
+    expect(test.Answers[0].name).to.equal("wiki.wiki");
+    expect(test.Answers[0].type).to.equal("RT");
+    expect(test.Answers[0].class).to.equal("INTERNET");
+    expect(test.Answers[0].ttl).to.equal(10800);
+    expect(test.Answers[0].size).to.equal(18);
+    expect(test.Answers[0].data.preference).to.equal(88);
+    expect(test.Answers[0].data.intermediateHostname).to.equal("wikipedia.wiki");
+  });
+
+});
