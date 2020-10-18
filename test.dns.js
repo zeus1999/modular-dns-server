@@ -694,3 +694,50 @@ describe("RECORD MB", function() {
 
 });
 
+describe("RECORD RP", function() {
+
+  let test = new DNSPacket("7e92858000010002000000010477696b690477696b690000110001c00c0011000100002a30001a0b6a756e672d746f62696173076f75746c6f6f6b03636f6d0000c00c0011000100002a3000280b6a756e672d746f62696173076f75746c6f6f6b026465000e74657374656e7472796f6d656761000000290500000000000000").printPacket();
+  
+  it("Check Header", function(){
+    expect(test.Header.id).to.equal(32402);
+    expect(test.Header.flags.qr).to.equal(1);
+    expect(test.Header.flags.opcode).to.equal("0000");
+    expect(test.Header.flags.aa).to.equal("1");
+    expect(test.Header.flags.tc).to.equal("0");
+    expect(test.Header.flags.rd).to.equal("1");
+    expect(test.Header.flags.ra).to.equal("1");
+    expect(test.Header.flags.z).to.equal("000");
+    expect(test.Header.flags.rcode).to.equal("0000");
+  });
+
+  it("Count of Sections", function(){
+    expect(test.Questions.length).to.equal(test.Header.qdcount);
+    expect(test.Answers.length).to.equal(test.Header.ancount + test.Header.nscount + test.Header.arcount);
+  });
+
+  it("Question", function(){
+    expect(test.Questions[0].type).to.equal("RP");
+    expect(test.Questions[0].name).to.equal("wiki.wiki");
+    expect(test.Questions[0].class).to.equal("INTERNET");
+  });
+
+  it("Answer", function(){
+    expect(test.Answers[0].name).to.equal("wiki.wiki");
+    expect(test.Answers[0].type).to.equal("RP");
+    expect(test.Answers[0].class).to.equal("INTERNET");
+    expect(test.Answers[0].ttl).to.equal(10800);
+    expect(test.Answers[0].size).to.equal(26);
+    expect(test.Answers[0].data.mailbox).to.equal("jung-tobias.outlook.com");
+    expect(test.Answers[0].data.txtRR).to.equal("");
+
+    
+    expect(test.Answers[1].name).to.equal("wiki.wiki");
+    expect(test.Answers[1].type).to.equal("RP");
+    expect(test.Answers[1].class).to.equal("INTERNET");
+    expect(test.Answers[1].ttl).to.equal(10800);
+    expect(test.Answers[1].size).to.equal(40);
+    expect(test.Answers[1].data.mailbox).to.equal("jung-tobias.outlook.de");
+    expect(test.Answers[1].data.txtRR).to.equal("testentryomega");
+  });
+
+});
