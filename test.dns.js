@@ -209,7 +209,6 @@ describe("RECORD AAAA", function() {
 
 });
 
-
 describe("RECORD CNAME", function() {
 
   let test = new DNSPacket("004481000001000100000000037777770b6a756e672d746f626961730264650000050001c00c000500010000003c0002c010").printPacket();
@@ -247,8 +246,6 @@ describe("RECORD CNAME", function() {
   });
 
 });
-
-
 
 describe("RECORD NS", function() {
 
@@ -291,7 +288,6 @@ describe("RECORD NS", function() {
 
 });
 
-
 describe("RECORD MX", function() {
 
   let test = new DNSPacket("0048810000010001000000000b6a756e672d746f6269617302646500000f0001c00c000f00010000003c0004000ac00c").printPacket();
@@ -330,7 +326,6 @@ describe("RECORD MX", function() {
   });
 
 });
-
 
 describe("RECORD TXT", function() {
 
@@ -455,7 +450,6 @@ describe("RECORD NAPTR - REGEX", function() {
 
 });
 
-
 describe("RECORD NAPTR - REPLACEMENT", function() {
 
   let test = new DNSPacket("005c85800001000100000000056e617074720477696b690477696b690000ff0001c00c0023000100002a30001a007b0141015303534950000977696b697065646961036f726700").printPacket();
@@ -498,7 +492,6 @@ describe("RECORD NAPTR - REPLACEMENT", function() {
   });
 
 });
-
 
 describe("RECORD LOC", function() {
 
@@ -547,7 +540,6 @@ describe("RECORD LOC", function() {
 
 });
 
-
 describe("RECORD MINFO", function() {
 
   let test = new DNSPacket("dd6d858000010001000000000477696b690477696b6900000e0001c00c000e000100002a30002f09746573742e77696b6905676d61696c03636f6d000c6572726f726d61696c626f78076f75746c6f6f6b02756bc037").printPacket();
@@ -586,8 +578,6 @@ describe("RECORD MINFO", function() {
   });
 
 });
-
-
 
 describe("RECORD ISDN", function() {
 
@@ -628,8 +618,6 @@ describe("RECORD ISDN", function() {
 
 });
 
-
-
 describe("RECORD MG", function() {
 
   let test = new DNSPacket("117c858000010001000000000477696b690477696b690000080001c00c0008000100002a3000180b6a756e672d746f62696173076f75746c6f6f6b02646500").printPacket();
@@ -663,7 +651,45 @@ describe("RECORD MG", function() {
     expect(test.Answers[0].class).to.equal("INTERNET");
     expect(test.Answers[0].ttl).to.equal(10800);
     expect(test.Answers[0].size).to.equal(24);
-    expect(test.Answers[0].data.mailGroupMember).to.equal("jung-tobias.outlook.de");
+    expect(test.Answers[0].data).to.equal("jung-tobias.outlook.de");
+  });
+
+});
+
+describe("RECORD MB", function() {
+
+  let test = new DNSPacket("f022858000010001000000010477696b690477696b690000070001c00c0007000100002a30000f0977696b697065646961036f7267000000290500000000000000").printPacket();
+  
+  it("Check Header", function(){
+    expect(test.Header.id).to.equal(61474);
+    expect(test.Header.flags.qr).to.equal(1);
+    expect(test.Header.flags.opcode).to.equal("0000");
+    expect(test.Header.flags.aa).to.equal("1");
+    expect(test.Header.flags.tc).to.equal("0");
+    expect(test.Header.flags.rd).to.equal("1");
+    expect(test.Header.flags.ra).to.equal("1");
+    expect(test.Header.flags.z).to.equal("000");
+    expect(test.Header.flags.rcode).to.equal("0000");
+  });
+
+  it("Count of Sections", function(){
+    expect(test.Questions.length).to.equal(test.Header.qdcount);
+    expect(test.Answers.length).to.equal(test.Header.ancount + test.Header.nscount + test.Header.arcount);
+  });
+
+  it("Question", function(){
+    expect(test.Questions[0].type).to.equal("MB");
+    expect(test.Questions[0].name).to.equal("wiki.wiki");
+    expect(test.Questions[0].class).to.equal("INTERNET");
+  });
+
+  it("Answer", function(){
+    expect(test.Answers[0].name).to.equal("wiki.wiki");
+    expect(test.Answers[0].type).to.equal("MB");
+    expect(test.Answers[0].class).to.equal("INTERNET");
+    expect(test.Answers[0].ttl).to.equal(10800);
+    expect(test.Answers[0].size).to.equal(15);
+    expect(test.Answers[0].data).to.equal("wikipedia.org");
   });
 
 });
