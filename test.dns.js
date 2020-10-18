@@ -898,3 +898,42 @@ describe("RECORD CAA", function() {
   });
 
 });
+
+describe("RECORD AFSDB", function() {
+
+  let test = new DNSPacket("95e4858000010001000000010477696b690477696b690000120001c00c0012000100002a300014000905616673646206676f6f676c6503636f6d000000290500000000000000").printPacket();
+  
+  it("Check Header", function(){
+    expect(test.Header.id).to.equal(38372);
+    expect(test.Header.flags.qr).to.equal(1);
+    expect(test.Header.flags.opcode).to.equal("0000");
+    expect(test.Header.flags.aa).to.equal("1");
+    expect(test.Header.flags.tc).to.equal("0");
+    expect(test.Header.flags.rd).to.equal("1");
+    expect(test.Header.flags.ra).to.equal("1");
+    expect(test.Header.flags.z).to.equal("000");
+    expect(test.Header.flags.rcode).to.equal("0000");
+  });
+
+  it("Count of Sections", function(){
+    expect(test.Questions.length).to.equal(test.Header.qdcount);
+    expect(test.Answers.length).to.equal(test.Header.ancount + test.Header.nscount + test.Header.arcount);
+  });
+
+  it("Question", function(){
+    expect(test.Questions[0].type).to.equal("AFSDB");
+    expect(test.Questions[0].name).to.equal("wiki.wiki");
+    expect(test.Questions[0].class).to.equal("INTERNET");
+  });
+
+  it("Answer", function(){
+    expect(test.Answers[0].name).to.equal("wiki.wiki");
+    expect(test.Answers[0].type).to.equal("AFSDB");
+    expect(test.Answers[0].class).to.equal("INTERNET");
+    expect(test.Answers[0].ttl).to.equal(10800);
+    expect(test.Answers[0].size).to.equal(20);
+    expect(test.Answers[0].data.subtype).to.equal(9);
+    expect(test.Answers[0].data.hostname).to.equal("afsdb.google.com");
+  });
+
+});
