@@ -627,3 +627,44 @@ describe("RECORD ISDN", function() {
   });
 
 });
+
+
+
+describe("RECORD MG", function() {
+
+  let test = new DNSPacket("117c858000010001000000000477696b690477696b690000080001c00c0008000100002a3000180b6a756e672d746f62696173076f75746c6f6f6b02646500").printPacket();
+  
+  it("Check Header", function(){
+    expect(test.Header.id).to.equal(4476);
+    expect(test.Header.flags.qr).to.equal(1);
+    expect(test.Header.flags.opcode).to.equal("0000");
+    expect(test.Header.flags.aa).to.equal("1");
+    expect(test.Header.flags.tc).to.equal("0");
+    expect(test.Header.flags.rd).to.equal("1");
+    expect(test.Header.flags.ra).to.equal("1");
+    expect(test.Header.flags.z).to.equal("000");
+    expect(test.Header.flags.rcode).to.equal("0000");
+  });
+
+  it("Count of Sections", function(){
+    expect(test.Questions.length).to.equal(test.Header.qdcount);
+    expect(test.Answers.length).to.equal(test.Header.ancount + test.Header.nscount + test.Header.arcount);
+  });
+
+  it("Question", function(){
+    expect(test.Questions[0].type).to.equal("MG");
+    expect(test.Questions[0].name).to.equal("wiki.wiki");
+    expect(test.Questions[0].class).to.equal("INTERNET");
+  });
+
+  it("Answer", function(){
+    expect(test.Answers[0].name).to.equal("wiki.wiki");
+    expect(test.Answers[0].type).to.equal("MG");
+    expect(test.Answers[0].class).to.equal("INTERNET");
+    expect(test.Answers[0].ttl).to.equal(10800);
+    expect(test.Answers[0].size).to.equal(24);
+    expect(test.Answers[0].data.mailGroupMember).to.equal("jung-tobias.outlook.de");
+  });
+
+});
+
