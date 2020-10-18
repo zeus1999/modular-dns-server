@@ -818,3 +818,43 @@ describe("RECORD RT", function() {
   });
 
 });
+
+describe("RECORD GPOS", function() {
+
+  let test = new DNSPacket("77d4858000010001000000000477696b690477696b6900001b0001c00c001b000100002a300020062d33322e31301438372e3131313635373138313131333334353334053130303030").printPacket();
+  
+  it("Check Header", function(){
+    expect(test.Header.id).to.equal(30676);
+    expect(test.Header.flags.qr).to.equal(1);
+    expect(test.Header.flags.opcode).to.equal("0000");
+    expect(test.Header.flags.aa).to.equal("1");
+    expect(test.Header.flags.tc).to.equal("0");
+    expect(test.Header.flags.rd).to.equal("1");
+    expect(test.Header.flags.ra).to.equal("1");
+    expect(test.Header.flags.z).to.equal("000");
+    expect(test.Header.flags.rcode).to.equal("0000");
+  });
+
+  it("Count of Sections", function(){
+    expect(test.Questions.length).to.equal(test.Header.qdcount);
+    expect(test.Answers.length).to.equal(test.Header.ancount + test.Header.nscount + test.Header.arcount);
+  });
+
+  it("Question", function(){
+    expect(test.Questions[0].type).to.equal("GPOS");
+    expect(test.Questions[0].name).to.equal("wiki.wiki");
+    expect(test.Questions[0].class).to.equal("INTERNET");
+  });
+
+  it("Answer", function(){
+    expect(test.Answers[0].name).to.equal("wiki.wiki");
+    expect(test.Answers[0].type).to.equal("GPOS");
+    expect(test.Answers[0].class).to.equal("INTERNET");
+    expect(test.Answers[0].ttl).to.equal(10800);
+    expect(test.Answers[0].size).to.equal(32);
+    expect(test.Answers[0].data.latitude).to.equal("87.11165718111334534");
+    expect(test.Answers[0].data.longitude).to.equal("-32.10");
+    expect(test.Answers[0].data.altitude).to.equal("10000");
+  });
+
+});
