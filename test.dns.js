@@ -500,3 +500,54 @@ describe("RECORD NAPTR - REPLACEMENT", function() {
 });
 
 
+
+
+
+describe("RECORD LOC", function() {
+
+  let test = new DNSPacket("006c858000010002000000000477696b690477696b690000ff0001c00c0006000100002a3000350f6465736b746f702d3963767572313800066e6f626f647907696e76616c69640078684d2b00002a3000000e100012750000000e10c00c001d000100002a30001000151212885895a090887d9400986f70").printPacket();
+  
+  it("Check Header", function(){
+    expect(test.Header.id).to.equal(108);
+    expect(test.Header.flags.qr).to.equal(1);
+    expect(test.Header.flags.opcode).to.equal("0000");
+    expect(test.Header.flags.aa).to.equal("1");
+    expect(test.Header.flags.tc).to.equal("0");
+    expect(test.Header.flags.rd).to.equal("1");
+    expect(test.Header.flags.ra).to.equal("1");
+    expect(test.Header.flags.z).to.equal("000");
+    expect(test.Header.flags.rcode).to.equal("0000");
+  });
+
+  it("Count of Sections", function(){
+    expect(test.Questions.length).to.equal(test.Header.qdcount);
+    expect(test.Answers.length).to.equal(test.Header.ancount + test.Header.nscount + test.Header.arcount);
+  });
+
+  it("Question", function(){
+    expect(test.Questions[0].type).to.equal("ANY");
+    expect(test.Questions[0].name).to.equal("wiki.wiki");
+    expect(test.Questions[0].class).to.equal("INTERNET");
+  });
+
+  it("Answer", function(){
+    expect(test.Answers[0].name).to.equal("wiki.wiki");
+    expect(test.Answers[0].type).to.equal("SOA");
+
+    expect(test.Answers[1].name).to.equal("wiki.wiki");
+    expect(test.Answers[1].type).to.equal("LOC");
+    expect(test.Answers[1].class).to.equal("INTERNET");
+    expect(test.Answers[1].ttl).to.equal(10800);
+    expect(test.Answers[1].size).to.equal(16);
+    expect(test.Answers[1].data.version).to.equal(0);
+    expect(test.Answers[1].data.size).to.equal(100000);
+    expect(test.Answers[1].data.horizontalPrecision).to.equal(100);
+    expect(test.Answers[1].data.verticalPrecision).to.equal(100);
+    expect(test.Answers[1].data.latitude).to.equal("38° 53' 43.2'' N");
+    expect(test.Answers[1].data.longitude).to.equal("77° 3' 0.5'' E");
+    expect(test.Answers[1].data.altitude).to.equal(-10000);
+  });
+
+});
+
+
