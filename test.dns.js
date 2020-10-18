@@ -1013,3 +1013,44 @@ describe("RECORD X25", function() {
   });
 
 });
+
+describe("RECORD CERT", function() {
+
+  let test = new DNSPacket("459a858000010001000000010477696b690477696b690000250001c00c0025000100002a30026c000100000130820263308201cca003020102020100300d06092a864886f70d0101050500302e310b3009060355040613025553310c300a060355040a130349424d3111300f060355040b13084c6f63616c204341301e170d3939313232323035303030305a170d3030313232333034353935395a302e310b3009060355040613025553310c300a060355040a130349424d3111300f060355040b13084c6f63616c20434130819f300d06092a864886f70d010101050003818d0030818902818100f66d9128ef119a5f6ff418792b34566f971068bbdbf5266b7f3c389330fbdef2bf45789010d1076f1524ffd093d0603db4ac7d1b8a67432e035d3729e6c91a12d92fc82277e999febd8b27361b44cfc91be61c888e65b74277e6011d08b569d923d7b3437168fa4b5e2d56eac55fbdf3c74b0da0c4bbf6adedb972ab0ecc5ebb0203010001a3819030818d304b0609551d0f0186f842010d043e133c47656e65726174656420627920746865205365637572655761792053656375726974792053657276657220666f72204f532f33393020285241434629300e0603551d0f0101ff040403020006300f0603551d130101ff040530030101ff301d0603551d0e041604149dfea1c472093270d3aedd2d2c2bfe76a5c7a60c300d06092a864886f70d010105050003818100c690cedfb36a3d4653bef2ce5afc8a23015e0750af0b19656268e5ec6702e70900461066639fc8b88c0faa18abe6677ef3349fc1bf63bf6af27870beec6960e9d14805c5a7ac5292b20e799b49318d61d342caa7f257dcd835b2f6766a0135dba247b10d1b8733794cab187dbc1f4f07e3756006cba55fd67622feb3beaf230e0000290500000000000000").printPacket();
+  
+  it("Check Header", function(){
+    expect(test.Header.id).to.equal(17818);
+    expect(test.Header.flags.qr).to.equal(1);
+    expect(test.Header.flags.opcode).to.equal("0000");
+    expect(test.Header.flags.aa).to.equal("1");
+    expect(test.Header.flags.tc).to.equal("0");
+    expect(test.Header.flags.rd).to.equal("1");
+    expect(test.Header.flags.ra).to.equal("1");
+    expect(test.Header.flags.z).to.equal("000");
+    expect(test.Header.flags.rcode).to.equal("0000");
+  });
+
+  it("Count of Sections", function(){
+    expect(test.Questions.length).to.equal(test.Header.qdcount);
+    expect(test.Answers.length).to.equal(test.Header.ancount + test.Header.nscount + test.Header.arcount);
+  });
+
+  it("Question", function(){
+    expect(test.Questions[0].type).to.equal("CERT");
+    expect(test.Questions[0].name).to.equal("wiki.wiki");
+    expect(test.Questions[0].class).to.equal("INTERNET");
+  });
+
+  it("Answer", function(){
+    expect(test.Answers[0].name).to.equal("wiki.wiki");
+    expect(test.Answers[0].type).to.equal("CERT");
+    expect(test.Answers[0].class).to.equal("INTERNET");
+    expect(test.Answers[0].ttl).to.equal(10800);
+    expect(test.Answers[0].size).to.equal(620);
+    expect(test.Answers[0].data.type).to.equal("PKIX");
+    expect(test.Answers[0].data.keyTag).to.equal(0);
+    expect(test.Answers[0].data.algorithm).to.equal("RSA/MD5");
+    expect(test.Answers[0].data.certificate).to.equal("MIICYzCCAcygAwIBAgIBADANBgkqhkiG9w0BAQUFADAuMQswCQYDVQQGEwJVUzEMMAoGA1UEChMDSUJNMREwDwYDVQQLEwhMb2NhbCBDQTAeFw05OTEyMjIwNTAwMDBaFw0wMDEyMjMwNDU5NTlaMC4xCzAJBgNVBAYTAlVTMQwwCgYDVQQKEwNJQk0xETAPBgNVBAsTCExvY2FsIENBMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD2bZEo7xGaX2/0GHkrNFZvlxBou9v1Jmt/PDiTMPve8r9FeJAQ0QdvFST/0JPQYD20rH0bimdDLgNdNynmyRoS2S/IInfpmf69iyc2G0TPyRvmHIiOZbdCd+YBHQi1adkj17NDcWj6S14tVurFX73zx0sNoMS79q3tuXKrDsxeuwIDAQABo4GQMIGNMEsGCVUdDwGG+EIBDQQ+EzxHZW5lcmF0ZWQgYnkgdGhlIFNlY3VyZVdheSBTZWN1cml0eSBTZXJ2ZXIgZm9yIE9TLzM5MCAoUkFDRikwDgYDVR0PAQH/BAQDAgAGMA8GA1UdEwEB/wQFMAMBAf8wHQYDVR0OBBYEFJ3+ocRyCTJw067dLSwr/nalx6YMMA0GCSqGSIb3DQEBBQUAA4GBAMaQzt+zaj1GU77yzlr8iiMBXgdQrwsZZWJo5exnAucJAEYQZmOfyLiMD6oYq+ZnfvM0n8G/Y79q8nhwvuxpYOnRSAXFp6xSkrIOeZtJMY1h00LKp/JX3Ng1svZ2agE126JHsQ0bhzN5TKsYfbwfTwfjdWAGy6Vf1nYi/rO+ryMO");
+  });
+
+});
