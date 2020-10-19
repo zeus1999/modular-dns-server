@@ -1,5 +1,5 @@
 {
-  "name": "newdnsserver",
+  "name": "modular-dns-server",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
