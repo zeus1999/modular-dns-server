@@ -7,7 +7,7 @@ var RR = require("./lib/record");
 
 
 let server = new DNSServer();
-server.listen({ port: 53, host: "192.168.178.30" }, function(message, remote, srv){
+server.listen({ port: 53, host: "0.0.0.0" }, function(message, remote, srv){
 
     message.addAnswerRR(
         new DNSAnswer("google.com", "INTERNET", 123,
